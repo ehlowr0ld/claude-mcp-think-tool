@@ -42,9 +42,9 @@ Add this configuration to your MCP configuration file:
 ```
 
 File location by operating system:
-- **Windows**: `%APPDATA%\Anthropic\Claude\mcp.json`
-- **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json`
-- **Linux**: `~/.config/Anthropic/Claude/mcp.json`
+- **Windows**: `C:\Users\[username]\AppData\Roaming\Claude\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json` (may vary)
+- **Linux**: `~/.config/Anthropic/Claude/mcp.json` (may vary)
 
 If installed globally, you can also use:
 

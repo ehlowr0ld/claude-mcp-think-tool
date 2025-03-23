@@ -1,43 +1,55 @@
 # Claude MCP Think Tool
 
-Un servidor MCP (Model Context Protocol) que implementa la herramienta "think" para Claude Desktop.
+A Model Context Protocol (MCP) server that implements the "think" tool for Claude Desktop.
 
-## Descripción
+## Description
 
-Esta herramienta permite a Claude utilizar un espacio estructurado para pensar y razonar paso a paso durante la resolución de problemas complejos. La herramienta proporciona:
+This tool allows Claude to use a structured space for thinking and reasoning step-by-step during complex problem-solving. The tool provides:
 
-- Registro de pensamientos con marcas de tiempo
-- Recuperación de la secuencia de pensamiento
-- Estadísticas sobre el proceso de pensamiento
-- Capacidad para borrar la sesión de pensamiento
+- Recording thoughts with timestamps
+- Retrieving the sequence of thoughts
+- Statistics about the thinking process
+- Ability to clear the thinking session
 
-## Instalación
+## Installation
 
-### Usando npx (sin instalación)
+### Option 1: Install globally from npm (recommended)
 
 ```bash
-npx -y github:cgize/claude-mcp-think-tool
+npm install -g @cgize/mcp-think-tool
 ```
 
-### Instalación global
+### Option 2: Install directly from GitHub
 
 ```bash
 npm install -g github:cgize/claude-mcp-think-tool
 ```
 
-## Configuración con Claude Desktop
+### Option 3: Local installation (for development)
 
-Añade esta configuración a tu archivo `claude_desktop_config.json`:
+```bash
+# Clone the repository
+git clone https://github.com/cgize/claude-mcp-think-tool.git
+cd claude-mcp-think-tool
+
+# Install dependencies and build
+npm install
+npm run build
+
+# Link globally
+npm link
+```
+
+## Configuration with Claude Desktop
+
+Add this configuration to your MCP configuration file:
 
 ```json
 {
   "mcpServers": {
     "think-tool": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "github:cgize/claude-mcp-think-tool"
-      ],
+      "command": "claude-mcp-think-tool",
+      "args": [],
       "type": "stdio",
       "pollingInterval": 30000,
       "startupTimeout": 30000,
@@ -47,28 +59,38 @@ Añade esta configuración a tu archivo `claude_desktop_config.json`:
 }
 ```
 
-La ubicación de este archivo depende de tu sistema operativo:
+The location of this file depends on your operating system:
 
 - **Windows**: `%APPDATA%\Anthropic\Claude\mcp.json`
 - **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json`
 - **Linux**: `~/.config/Anthropic/Claude/mcp.json`
 
-## Uso
+## Usage
 
-Una vez configurado, puedes usar la herramienta de pensamiento con Claude Desktop para problemas que requieren razonamiento paso a paso:
+Once configured, you can use the thinking tool with Claude Desktop for problems that require step-by-step reasoning:
 
-1. **Registrar un pensamiento**: `think` - Guarda un paso de razonamiento
-2. **Ver todos los pensamientos**: `get_thoughts` - Muestra la secuencia completa de razonamiento
-3. **Limpiar pensamientos**: `clear_thoughts` - Borra todos los pensamientos guardados
+1. **Record a thought**: `think` - Saves a reasoning step
+2. **View all thoughts**: `get_thoughts` - Shows the complete reasoning sequence
+3. **Clear thoughts**: `clear_thoughts` - Deletes all saved thoughts
+4. **Get statistics**: `get_thought_stats` - Shows statistics about your thinking process
 
-## Desarrollo
+## Example
 
-### Requisitos previos
+Ask Claude to solve a complex problem using the think tool:
 
-- Node.js 14 o superior
-- npm o yarn
+```
+Solve this mathematical problem step by step using the think tool:
+A train travels at a constant speed of 60 km/h. It departs from station A at 9:00 AM and arrives at station B at 11:30 AM. What is the distance between stations A and B?
+```
 
-### Configuración local
+## Development
+
+### Prerequisites
+
+- Node.js 14 or higher
+- npm or yarn
+
+### Local Setup
 
 ```bash
 git clone https://github.com/cgize/claude-mcp-think-tool.git
@@ -77,6 +99,15 @@ npm install
 npm run build
 ```
 
-## Licencia
+### Publishing
+
+If you want to publish your own version:
+
+```bash
+npm login
+npm publish --access public
+```
+
+## License
 
 MIT

@@ -1,7 +1,7 @@
 {
-  "name": "claude-mcp-think-tool",
+  "name": "@cgize/mcp-think-tool",
   "version": "1.0.0",
-  "description": "Servidor MCP Think Tool para Claude Desktop",
+  "description": "MCP Think Tool server for Claude Desktop",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
@@ -11,13 +11,16 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node --esm src/index.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "claude",
     "mcp",
     "think-tool",
-    "anthropic"
+    "anthropic",
+    "ai",
+    "reasoning"
   ],
   "author": "cgize",
   "license": "MIT",
@@ -37,5 +40,11 @@
   "bugs": {
     "url": "https://github.com/cgize/claude-mcp-think-tool/issues"
   },
-  "homepage": "https://github.com/cgize/claude-mcp-think-tool#readme"
+  "homepage": "https://github.com/cgize/claude-mcp-think-tool#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }

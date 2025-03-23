@@ -1,21 +1,19 @@
 # MCP Think Tool Server
 
-A Model Context Protocol (MCP) server implementing the "think" tool for improving Claude's complex reasoning capabilities.
+A Model Context Protocol (MCP) server implementing the ["think" tool](https://www.anthropic.com/engineering/claude-think-tool) for improving Claude's complex reasoning capabilities.
 
 ## Overview
 
-This MCP server implements the "think" tool as described in Anthropic's [blog post](https://www.anthropic.com/engineering/claude-think-tool), which provides Claude with a dedicated space for structured thinking during complex problem-solving tasks. The think tool has been shown to significantly improve performance in complex tasks requiring policy adherence and reasoning in long chains of tool calls.
+This MCP server implements Anthropic's "think" tool, which provides Claude with a dedicated space for structured thinking during complex problem-solving tasks. As described in [Anthropic's blog post](https://www.anthropic.com/engineering/claude-think-tool), the think tool has been shown to significantly improve performance in complex tasks requiring policy adherence and reasoning in long chains of tool calls.
 
-## Features
+## Key Use Cases
 
-- **Structured Thinking Space**: Provides Claude with a dedicated place to break down complex problems
-- **Thought History**: Maintains a log of all thoughts with timestamps for reference
-- **Statistics and Analysis**: Offers metadata about thinking patterns
-- **Clean Slate Option**: Allows clearing thought history when starting fresh
+- **Complex Tool Chains**: When Claude needs to call complex tools and analyze outputs carefully
+- **Policy Adherence**: For navigating policy-heavy environments with detailed guidelines
+- **Sequential Decision Making**: When each step builds on previous ones and mistakes are costly
+- **Multi-step Analysis**: Breaking down complex problems into manageable steps
 
 ## Installation
-
-Install from npm:
 
 ```bash
 npm install -g @cgize/mcp-think-tool
@@ -23,7 +21,7 @@ npm install -g @cgize/mcp-think-tool
 
 ## Configuration
 
-To use this tool with Claude Desktop, add the following configuration to your MCP config file:
+Add this configuration to your MCP configuration file:
 
 ```json
 {
@@ -43,13 +41,12 @@ To use this tool with Claude Desktop, add the following configuration to your MC
 }
 ```
 
-The location of this file depends on your operating system:
-
+File location by operating system:
 - **Windows**: `%APPDATA%\Anthropic\Claude\mcp.json`
 - **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json`
 - **Linux**: `~/.config/Anthropic/Claude/mcp.json`
 
-If you've installed the package globally using `npm install -g @cgize/mcp-think-tool`, you can also use:
+If installed globally, you can also use:
 
 ```json
 {
@@ -66,36 +63,19 @@ If you've installed the package globally using `npm install -g @cgize/mcp-think-
 }
 ```
 
-## Usage
+## Available Tools
 
-Once configured, Claude will have access to these tools:
+- **think**: Record structured reasoning during problem-solving
+- **get_thoughts**: Retrieve all recorded thoughts 
+- **clear_thoughts**: Reset the thinking process
+- **get_thought_stats**: Analyze thinking patterns
 
-1. **think**: Record a structured thought or reasoning step
-2. **get_thoughts**: Retrieve all thoughts recorded in the current session 
-3. **clear_thoughts**: Clear all recorded thoughts to start fresh
-4. **get_thought_stats**: Get statistics about the recorded thoughts
-
-## Example
-
-Ask Claude to solve a complex problem using the think tool:
+## Example Prompt
 
 ```
-Solve this mathematical problem step by step using the think tool:
+Using the think tool, solve this multi-step problem:
+
 A train travels at a constant speed of 60 km/h. It departs from station A at 9:00 AM and arrives at station B at 11:30 AM. What is the distance between stations A and B?
-```
-
-## Development
-
-For those who want to contribute or modify the tool:
-
-```bash
-# Clone the repository
-git clone https://github.com/cgize/claude-mcp-think-tool.git
-cd claude-mcp-think-tool
-
-# Install dependencies and build
-npm install
-npm run build
 ```
 
 ## License

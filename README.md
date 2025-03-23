@@ -83,31 +83,6 @@ Solve this mathematical problem step by step using the think tool:
 A train travels at a constant speed of 60 km/h. It departs from station A at 9:00 AM and arrives at station B at 11:30 AM. What is the distance between stations A and B?
 ```
 
-## Development
-
-### Prerequisites
-
-- Node.js 14 or higher
-- npm or yarn
-
-### Local Setup
-
-```bash
-git clone https://github.com/cgize/claude-mcp-think-tool.git
-cd claude-mcp-think-tool
-npm install
-npm run build
-```
-
-### Publishing
-
-If you want to publish your own version:
-
-```bash
-npm login
-npm publish --access public
-```
-
 ## License
 
 MIT

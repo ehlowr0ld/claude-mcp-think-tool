@@ -29,8 +29,8 @@ class ThinkToolServer {
     // Register the "think" tool
     this.server.tool(
       "think",
-      "Use this tool to think about something. It will not obtain new information or change anything, but just append the thought to the log.",
-      { thought: z.string().describe("A thought to analyze or reason about") },
+      "Use this tool to think about something. It will not obtain new information or change anything, but just append the thought to the log. Use it when complex reasoning or cache memory is needed, especially during long chains of tool calls, policy adherence scenarios, or sequential decision making.",
+      { thought: z.string().describe("A thought to think about. This can be structured reasoning, step-by-step analysis, policy verification, or any other mental process that helps with problem-solving.") },
       async ({ thought }) => {
         // Log the thought with a timestamp
         const timestamp = new Date().toISOString();
@@ -54,7 +54,7 @@ class ThinkToolServer {
     // Register the get_thoughts tool
     this.server.tool(
       "get_thoughts",
-      "Retrieve all thoughts recorded in the current session.",
+      "Retrieve all thoughts recorded in the current session to review your reasoning process.",
       async () => {
         if (this.thoughtsLog.length === 0) {
           return {
@@ -75,7 +75,7 @@ class ThinkToolServer {
     // Register the clear_thoughts tool
     this.server.tool(
       "clear_thoughts",
-      "Clear all thoughts recorded in the current session.",
+      "Clear all thoughts recorded in the current session. Use this to start fresh if the thinking process needs to be reset.",
       async () => {
         const count = this.thoughtsLog.length;
         this.thoughtsLog = [];
@@ -89,7 +89,7 @@ class ThinkToolServer {
     // Register the get_thought_stats tool
     this.server.tool(
       "get_thought_stats",
-      "Get statistics about the thoughts recorded in the current session.",
+      "Get statistics about the thoughts recorded in the current session to analyze your thinking process.",
       async () => {
         if (this.thoughtsLog.length === 0) {
           return {

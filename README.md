@@ -41,10 +41,8 @@ Add this configuration to your MCP configuration file:
 }
 ```
 
-File location by operating system:
-- **Windows**: `C:\Users\[username]\AppData\Roaming\Claude\claude_desktop_config.json`
-- **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json` (may vary)
-- **Linux**: `~/.config/Anthropic/Claude/mcp.json` (may vary)
+Configuration file location:
+- `C:\Users\[username]\AppData\Roaming\Claude\claude_desktop_config.json`
 
 If installed globally, you can also use:
 

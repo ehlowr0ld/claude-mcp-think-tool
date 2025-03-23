@@ -1,48 +1,55 @@
-# Claude MCP Think Tool
+# MCP Think Tool Server
 
-A Model Context Protocol (MCP) server that implements the "think" tool for Claude Desktop.
+A Model Context Protocol (MCP) server implementing the "think" tool for improving Claude's complex reasoning capabilities.
 
-## Description
+## Overview
 
-This tool allows Claude to use a structured space for thinking and reasoning step-by-step during complex problem-solving. The tool provides:
+This MCP server implements the "think" tool as described in Anthropic's [blog post](https://www.anthropic.com/engineering/claude-think-tool), which provides Claude with a dedicated space for structured thinking during complex problem-solving tasks. The think tool has been shown to significantly improve performance in complex tasks requiring policy adherence and reasoning in long chains of tool calls.
 
-- Recording thoughts with timestamps
-- Retrieving the sequence of thoughts
-- Statistics about the thinking process
-- Ability to clear the thinking session
+## Features
+
+- **Structured Thinking Space**: Provides Claude with a dedicated place to break down complex problems
+- **Thought History**: Maintains a log of all thoughts with timestamps for reference
+- **Statistics and Analysis**: Offers metadata about thinking patterns
+- **Clean Slate Option**: Allows clearing thought history when starting fresh
 
 ## Installation
 
-### Option 1: Install globally from npm (recommended)
+Install from npm:
 
 ```bash
 npm install -g @cgize/mcp-think-tool
 ```
 
-### Option 2: Install directly from GitHub
+## Configuration
 
-```bash
-npm install -g github:cgize/claude-mcp-think-tool
+To use this tool with Claude Desktop, add the following configuration to your MCP config file:
+
+```json
+{
+  "mcpServers": {
+    "think-tool": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cgize/mcp-think-tool"
+      ],
+      "type": "stdio",
+      "pollingInterval": 30000,
+      "startupTimeout": 30000,
+      "restartOnFailure": true
+    }
+  }
+}
 ```
 
-### Option 3: Local installation (for development)
+The location of this file depends on your operating system:
 
-```bash
-# Clone the repository
-git clone https://github.com/cgize/claude-mcp-think-tool.git
-cd claude-mcp-think-tool
+- **Windows**: `%APPDATA%\Anthropic\Claude\mcp.json`
+- **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json`
+- **Linux**: `~/.config/Anthropic/Claude/mcp.json`
 
-# Install dependencies and build
-npm install
-npm run build
-
-# Link globally
-npm link
-```
-
-## Configuration with Claude Desktop
-
-Add this configuration to your MCP configuration file:
+If you've installed the package globally using `npm install -g @cgize/mcp-think-tool`, you can also use:
 
 ```json
 {
@@ -59,20 +66,14 @@ Add this configuration to your MCP configuration file:
 }
 ```
 
-The location of this file depends on your operating system:
-
-- **Windows**: `%APPDATA%\Anthropic\Claude\mcp.json`
-- **macOS**: `~/Library/Application Support/Anthropic/Claude/mcp.json`
-- **Linux**: `~/.config/Anthropic/Claude/mcp.json`
-
 ## Usage
 
-Once configured, you can use the thinking tool with Claude Desktop for problems that require step-by-step reasoning:
+Once configured, Claude will have access to these tools:
 
-1. **Record a thought**: `think` - Saves a reasoning step
-2. **View all thoughts**: `get_thoughts` - Shows the complete reasoning sequence
-3. **Clear thoughts**: `clear_thoughts` - Deletes all saved thoughts
-4. **Get statistics**: `get_thought_stats` - Shows statistics about your thinking process
+1. **think**: Record a structured thought or reasoning step
+2. **get_thoughts**: Retrieve all thoughts recorded in the current session 
+3. **clear_thoughts**: Clear all recorded thoughts to start fresh
+4. **get_thought_stats**: Get statistics about the recorded thoughts
 
 ## Example
 
@@ -81,6 +82,20 @@ Ask Claude to solve a complex problem using the think tool:
 ```
 Solve this mathematical problem step by step using the think tool:
 A train travels at a constant speed of 60 km/h. It departs from station A at 9:00 AM and arrives at station B at 11:30 AM. What is the distance between stations A and B?
+```
+
+## Development
+
+For those who want to contribute or modify the tool:
+
+```bash
+# Clone the repository
+git clone https://github.com/cgize/claude-mcp-think-tool.git
+cd claude-mcp-think-tool
+
+# Install dependencies and build
+npm install
+npm run build
 ```
 
 ## License

@@ -4,7 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-// Interfaz para almacenar los pensamientos
+// Interface for storing thoughts
 interface ThoughtRecord {
   timestamp: string;
   thought: string;
@@ -15,24 +15,24 @@ class ThinkToolServer {
   private server: McpServer;
 
   constructor() {
-    // Inicializar el servidor MCP
+    // Initialize MCP server
     this.server = new McpServer({
       name: "think-tool",
       version: "1.0.0"
     });
     
-    // Registrar las herramientas
+    // Register tools
     this.registerTools();
   }
 
   private registerTools(): void {
-    // Registrar la herramienta "think"
+    // Register the "think" tool
     this.server.tool(
       "think",
-      "Usa esta herramienta para pensar sobre algo. No obtendrá nueva información ni cambiará nada, solo registrará el pensamiento.",
-      { thought: z.string().describe("Un pensamiento para analizar o razonar") },
+      "Use this tool to think about something. It will not obtain new information or change anything, but just append the thought to the log.",
+      { thought: z.string().describe("A thought to analyze or reason about") },
       async ({ thought }) => {
-        // Registrar el pensamiento con marca de tiempo
+        // Log the thought with a timestamp
         const timestamp = new Date().toISOString();
         this.thoughtsLog.push({
           timestamp,
@@ -41,7 +41,7 @@ class ThinkToolServer {
         
         console.error(`[${timestamp}] Thought recorded: ${thought.substring(0, 50)}${thought.length > 50 ? '...' : ''}`);
         
-        // Retornar una confirmación
+        // Return a confirmation
         return {
           content: [{ 
             type: "text", 
@@ -51,10 +51,10 @@ class ThinkToolServer {
       }
     );
 
-    // Registrar la herramienta get_thoughts
+    // Register the get_thoughts tool
     this.server.tool(
       "get_thoughts",
-      "Recupera todos los pensamientos grabados en la sesión actual.",
+      "Retrieve all thoughts recorded in the current session.",
       async () => {
         if (this.thoughtsLog.length === 0) {
           return {
@@ -72,10 +72,10 @@ class ThinkToolServer {
       }
     );
 
-    // Registrar la herramienta clear_thoughts
+    // Register the clear_thoughts tool
     this.server.tool(
       "clear_thoughts",
-      "Borra todos los pensamientos grabados en la sesión actual.",
+      "Clear all thoughts recorded in the current session.",
       async () => {
         const count = this.thoughtsLog.length;
         this.thoughtsLog = [];
@@ -86,10 +86,10 @@ class ThinkToolServer {
       }
     );
 
-    // Registrar la herramienta get_thought_stats
+    // Register the get_thought_stats tool
     this.server.tool(
       "get_thought_stats",
-      "Obtiene estadísticas sobre los pensamientos registrados en la sesión actual.",
+      "Get statistics about the thoughts recorded in the current session.",
       async () => {
         if (this.thoughtsLog.length === 0) {
           return {
@@ -138,7 +138,7 @@ class ThinkToolServer {
   }
 }
 
-// Manejo de señales para cierre adecuado
+// Signal handling for graceful shutdown
 process.on('SIGINT', () => {
   console.error("Shutting down Think Tool MCP Server...");
   process.exit(0);
@@ -149,7 +149,7 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-// Iniciar servidor
+// Start server
 const server = new ThinkToolServer();
 server.run().catch(err => {
   console.error("Fatal error starting server:", err);

@@ -6,6 +6,31 @@ A Model Context Protocol (MCP) server implementing the ["think" tool](https://ww
 
 This MCP server implements Anthropic's "think" tool, which provides Claude with a dedicated space for structured thinking during complex problem-solving tasks. As described in [Anthropic's blog post](https://www.anthropic.com/engineering/claude-think-tool), the think tool has been shown to significantly improve performance in complex tasks requiring policy adherence and reasoning in long chains of tool calls.
 
+## Custom Instructions
+
+Add these custom instructions to Claude to optimize its use of the think tool:
+
+```
+You have access to a "think" tool that provides a dedicated space for structured reasoning. Using this tool significantly improves your performance on complex tasks. 
+
+## When to use the think tool 
+Before taking any action or responding to the user after receiving tool results, use the think tool as a scratchpad to: 
+- List the specific rules that apply to the current request 
+- Check if all required information is collected 
+- Verify that the planned action complies with all policies 
+- Iterate over tool results for correctness 
+- Analyze complex information from web searches or other tools 
+- Plan multi-step approaches before executing them 
+
+## How to use the think tool effectively 
+When using the think tool: 
+1. Break down complex problems into clearly defined steps 
+2. Identify key facts, constraints, and requirements 
+3. Check for gaps in information and plan how to fill them 
+4. Evaluate multiple approaches before choosing one 
+5. Verify your reasoning for logical errors or biases
+```
+
 ## Key Use Cases
 
 - **Complex Tool Chains**: When Claude needs to call complex tools and analyze outputs carefully

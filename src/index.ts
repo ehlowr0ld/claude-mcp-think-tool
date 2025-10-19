@@ -20,7 +20,7 @@ class ThinkToolServer {
       name: "think-tool",
       version: "1.0.0"
     });
-    
+
     // Register tools
     this.registerTools();
   }
@@ -29,7 +29,29 @@ class ThinkToolServer {
     // Register the "think" tool
     this.server.tool(
       "think",
-      "Use this tool to think about something. It will not obtain new information or change anything, but just append the thought to the log. Use it when complex reasoning or cache memory is needed, especially during long chains of tool calls, policy adherence scenarios, or sequential decision making.",
+      "Use 'think' to record reasoning steps in persistent sequence. Retrieve with 'get_thoughts' or 'get_thought_stats'. Sequence persists across sessions until 'clear_thoughts' called.\
+\
+## Mandatory Use Triggers\
+Call think before actions or responses when:\
+- Tool results require validation against integrity rules (test changes, shortcuts, coverage)\
+- Multi-step planning needed (≥3 sequential operations)\
+- Policy compliance verification required\
+- Complex information synthesis (web search results, codebase analysis)\
+- Gap identification in requirements or evidence\
+\
+## Execution Protocol\
+1. Clear thoughts at reasoning process start: 'clear_thoughts'\
+2. Record each step: problem decomposition → constraint identification → approach evaluation → validation\
+3. Structure thoughts as: [Rule/Constraint] → [Evidence] → [Decision] → [Next Action]\
+4. Verify: shortcuts detected (yes/no), integrity maintained (yes/no), evidence complete (yes/no)\
+5. Before finalizing: review sequence for logical consistency and policy adherence\
+\
+## Required Thought Content\
+- Applicable rules from system hierarchy (specific section references)\
+- Information completeness checklist (collected/missing)\
+- Compliance verification (test integrity, API stability, truth requirements)\
+- Alternative approaches ranked by correctness/effort\
+- Detected conflicts between user request and system constraints",
       { thought: z.string().describe("A thought to think about. This can be structured reasoning, step-by-step analysis, policy verification, or any other mental process that helps with problem-solving.") },
       async ({ thought }) => {
         // Log the thought with a timestamp
@@ -38,14 +60,14 @@ class ThinkToolServer {
           timestamp,
           thought
         });
-        
+
         console.error(`[${timestamp}] Thought recorded: ${thought.substring(0, 50)}${thought.length > 50 ? '...' : ''}`);
-        
+
         // Return a confirmation
         return {
-          content: [{ 
-            type: "text", 
-            text: `Thought recorded: ${thought.length > 50 ? thought.substring(0, 50) + '...' : thought}` 
+          content: [{
+            type: "text",
+            text: `Thought recorded: ${thought.length > 50 ? thought.substring(0, 50) + '...' : thought}`
           }]
         };
       }
@@ -61,11 +83,11 @@ class ThinkToolServer {
             content: [{ type: "text", text: "No thoughts have been recorded yet." }]
           };
         }
-        
-        const formattedThoughts = this.thoughtsLog.map((entry, index) => 
+
+        const formattedThoughts = this.thoughtsLog.map((entry, index) =>
           `Thought #${index + 1} (${entry.timestamp}):\n${entry.thought}\n`
         );
-        
+
         return {
           content: [{ type: "text", text: formattedThoughts.join("\n") }]
         };
@@ -79,7 +101,7 @@ class ThinkToolServer {
       async () => {
         const count = this.thoughtsLog.length;
         this.thoughtsLog = [];
-        
+
         return {
           content: [{ type: "text", text: `Cleared ${count} recorded thoughts.` }]
         };
@@ -96,27 +118,27 @@ class ThinkToolServer {
             content: [{ type: "text", text: "No thoughts have been recorded yet." }]
           };
         }
-        
+
         const totalThoughts = this.thoughtsLog.length;
         const avgLength = this.thoughtsLog.reduce((sum, entry) => sum + entry.thought.length, 0) / totalThoughts;
-        
+
         let longestThoughtIndex = 0;
         let longestThoughtLength = 0;
-        
+
         this.thoughtsLog.forEach((entry, index) => {
           if (entry.thought.length > longestThoughtLength) {
             longestThoughtLength = entry.thought.length;
             longestThoughtIndex = index;
           }
         });
-        
+
         const stats = {
           total_thoughts: totalThoughts,
           average_length: Math.round(avgLength * 100) / 100,
           longest_thought_index: longestThoughtIndex + 1,
           longest_thought_length: longestThoughtLength
         };
-        
+
         return {
           content: [{ type: "text", text: JSON.stringify(stats, null, 2) }]
         };
@@ -126,7 +148,7 @@ class ThinkToolServer {
 
   async run(transport = 'stdio'): Promise<void> {
     console.error(`Starting Think Tool MCP Server with ${transport} transport...`);
-    
+
     try {
       const transportHandler = new StdioServerTransport();
       await this.server.connect(transportHandler);

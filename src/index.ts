@@ -29,7 +29,9 @@ class ThinkToolServer {
     // Register the "think" tool
     this.server.tool(
       "think",
-      "Use 'think' to record reasoning steps in persistent sequence. Retrieve with 'get_thoughts' or 'get_thought_stats'. Sequence persists across sessions until 'clear_thoughts' called.\
+      "Usage:\
+Use 'think' to record reasoning steps in persistent sequence. Retrieve with 'get_thoughts' or 'get_thought_stats'. Sequence persists across sessions until 'clear_thoughts' called.\
+ALWAYS append all current thoughts in one call to the tool, avoid calling the tool multiple times in a row with one thought each if you can.\
 \
 ## Mandatory Use Triggers\
 Call think before actions or responses when:\
@@ -52,22 +54,46 @@ Call think before actions or responses when:\
 - Compliance verification (test integrity, API stability, truth requirements)\
 - Alternative approaches ranked by correctness/effort\
 - Detected conflicts between user request and system constraints",
-      { thought: z.string().describe("A thought to think about. This can be structured reasoning, step-by-step analysis, policy verification, or any other mental process that helps with problem-solving.") },
-      async ({ thought }) => {
-        // Log the thought with a timestamp
+      { thoughts: z.union([z.array(z.string()), z.string()]).describe("One or more thoughts to think about. Type: [array|json(array of strings)|string]. This can be structured reasoning, step-by-step analysis, policy verification, or any other mental process that helps with problem-solving.") },
+      async ({ thoughts }) => {
+        // Parse input into array of thoughts
+        let thoughtsArray: string[];
+
+        if (Array.isArray(thoughts)) {
+          thoughtsArray = thoughts;
+        } else {
+          // Try to parse as JSON array
+          try {
+            const parsed = JSON.parse(thoughts);
+            thoughtsArray = Array.isArray(parsed) ? parsed : [thoughts];
+          } catch {
+            // Fallback: treat as single thought
+            thoughtsArray = [thoughts];
+          }
+        }
+
+        // Log each thought with a timestamp
         const timestamp = new Date().toISOString();
-        this.thoughtsLog.push({
-          timestamp,
-          thought
-        });
+        for (const t of thoughtsArray) {
+          this.thoughtsLog.push({
+            timestamp,
+            thought: t
+          });
+        }
 
-        console.error(`[${timestamp}] Thought recorded: ${thought.substring(0, 50)}${thought.length > 50 ? '...' : ''}`);
+        console.error(`[${timestamp}] ${thoughtsArray.length} thought(s) recorded`);
 
-        // Return a confirmation
+        // Format feedback
+        const thoughtPreviews = thoughtsArray.map(t =>
+          `  - "${t.substring(0, 50)}${t.length > 50 ? '...' : ''}"`
+        ).join('\n');
+
+        const feedback = `${thoughtsArray.length} thought${thoughtsArray.length === 1 ? '' : 's'} recorded:\n${thoughtPreviews}`;
+
         return {
           content: [{
             type: "text",
-            text: `Thought recorded: ${thought.length > 50 ? thought.substring(0, 50) + '...' : thought}`
+            text: feedback
           }]
         };
       }
